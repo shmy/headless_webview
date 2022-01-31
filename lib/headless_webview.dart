@@ -4,13 +4,13 @@ import 'package:flutter/services.dart';
 
 class HeadlessResponse {
   final int id;
-  final String url;
+  final Uri url;
   final String? mimeType;
 
   HeadlessResponse(this.id, this.url, this.mimeType);
 
   factory HeadlessResponse.fromJson(Map<String, dynamic> json) =>
-      HeadlessResponse(json['id'], json['url'], json['mimeType']);
+      HeadlessResponse(json['id'], Uri.parse(json['url']), json['mimeType']);
 
   @override
   String toString() {

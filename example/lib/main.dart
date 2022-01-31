@@ -32,20 +32,9 @@ class _MyAppState extends State<MyApp> {
         url:
             "https://jx.parwix.com:4433/player/?url=https://v.qq.com/x/cover/mzc00200nx1hbcr.html",
         onIntercepted: (res) {
-          print(res);
-        });
-    Timer(const Duration(seconds: 10), () {
-      dispose();
-      initPlatformState2();
-    });
-  }
-
-  Future<void> initPlatformState2() async {
-    late final VoidCallback dispose;
-    dispose = await HeadlessWebview.run(
-        url: "https://www.baidu.com",
-        onIntercepted: (res) {
-          print(res);
+          if (res.url.path.endsWith("mp4") || res.url.path.endsWith("m3u8")) {
+            print(res);
+          }
         });
     Timer(const Duration(seconds: 10), () {
       dispose();

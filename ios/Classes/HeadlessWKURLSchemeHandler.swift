@@ -17,7 +17,9 @@ class HeadlessWKURLSchemeHandler: NSObject, WKURLSchemeHandler {
         self.channel = channel
         self.id = id
     }
-
+    deinit {
+        print("HeadlessWKURLSchemeHandler deinit")
+    }
     public func cancelAll() {
         tasks.forEach { task in
             if (task.state == .running) {

@@ -11,7 +11,8 @@ import WebKit
 
 class HeadlessWebview: NSObject {
     private var webView: WKWebView?
-    private var headlessWKURLSchemeHandler: HeadlessWKURLSchemeHandler
+    private var headlessWKURLSchemeHandler: HeadlessWKURLSchemeHandler?
+    private var uiWindow: UIWindow?
     init(channel: FlutterMethodChannel, id: Int) {
         WKWebViewCustome.hookWKWebView()
         let configuration = WKWebViewConfiguration()
@@ -24,20 +25,17 @@ class HeadlessWebview: NSObject {
         }
         self.webView = WKWebView(frame: .zero, configuration: configuration)
         
-        if let keyWindow = UIApplication.shared.keyWindow {
-                        /// Note: The WKWebView behaves very unreliable when rendering offscreen
-                        /// on a device. This is especially true with JavaScript, which simply
-                        /// won't be executed sometimes.
-                        /// So, add the headless WKWebView to the view hierarchy.
-                        /// This way is also possible to take screenshots.
-            keyWindow.insertSubview(self.webView!, at: 0)
-            keyWindow.sendSubviewToBack(self.webView!)
-            }
+        self.uiWindow = UIApplication.shared.keyWindow
+        self.uiWindow?.insertSubview(self.webView!, at: 0)
+        self.uiWindow?.sendSubviewToBack(self.webView!)
+        
     }
     deinit {
         print("HeadlessWebview - dealloc")
+        self.uiWindow = nil
         self.webView = nil
-        self.headlessWKURLSchemeHandler.cancelAll()
+        self.headlessWKURLSchemeHandler?.cancelAll()
+        self.headlessWKURLSchemeHandler = nil
     }
     
     required init?(coder: NSCoder) {
