@@ -25,10 +25,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
+  void initPlatformState() {
     late final VoidCallback dispose;
 
-    dispose = await HeadlessWebview.run(
+    dispose = HeadlessWebview.run(
         url:
             "https://jx.parwix.com:4433/player/?url=https://v.qq.com/x/cover/mzc00200nx1hbcr.html",
         onIntercepted: (res) {

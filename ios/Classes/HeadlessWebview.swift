@@ -32,7 +32,7 @@ class HeadlessWebview: NSObject {
         
     }
     deinit {
-//        print("HeadlessWebview - dealloc")
+        print("HeadlessWebview - dealloc")
         self.headlessWKURLSchemeHandler?.cancelAll()
         self.webView?.removeFromSuperview()
         self.uiWindow = nil

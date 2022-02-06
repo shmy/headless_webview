@@ -14,12 +14,12 @@ class HeadlessResponse {
 
   @override
   String toString() {
-    print('HeadlessResponse(id: $id, url: $url, mimeType: $mimeType)');
-    return super.toString();
+    return 'HeadlessResponse(id: $id, url: $url, mimeType: $mimeType)';
   }
 }
 
 class HeadlessWebview {
+  static int _id = -2022;
   static final MethodChannel _channel =
       const MethodChannel('tech.shmy.headless_webview')
         ..setMethodCallHandler(_onMethodCall);
@@ -41,16 +41,24 @@ class HeadlessWebview {
   static run({
     required String url,
     ValueChanged<HeadlessResponse>? onIntercepted,
-  }) async {
-    final id = await _channel.invokeMethod('launch', url);
-    _handlers.add((HeadlessResponse response) {
+  }) {
+    _id += 1;
+    if (_id > 2022) {
+      _id = -2022;
+    }
+    final id = _id;
+    void handle(HeadlessResponse response) {
       if (response.id != id) {
         return;
       }
       onIntercepted?.call(response);
-    });
-    return () async {
-      await _channel.invokeMethod('close', id);
+    }
+    _handlers.add(handle);
+    _channel.invokeMethod('launch', {"id": id, "url": url});
+
+    return () {
+      _handlers.remove(handle);
+      _channel.invokeMethod('close', id);
     };
   }
 }

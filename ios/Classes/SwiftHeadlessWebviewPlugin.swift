@@ -13,8 +13,11 @@ public class SwiftHeadlessWebviewPlugin: NSObject, FlutterPlugin {
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
       if (call.method == "launch") {
-          let id = HeadlessWebviewManager.run(url: call.arguments! as! String, channel: SwiftHeadlessWebviewPlugin.channel!)
-          result(id)
+          let args = call.arguments! as! NSDictionary
+          let id = args["id"] as! Int
+          let url = args["url"]! as! String
+          HeadlessWebviewManager.run(id: id, url: url, channel: SwiftHeadlessWebviewPlugin.channel!)
+          result(nil)
       } else if (call.method == "close") {
           let id = call.arguments! as! Int
           HeadlessWebviewManager.webViews.removeValue(forKey: id)
