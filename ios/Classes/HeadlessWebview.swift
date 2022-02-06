@@ -16,7 +16,7 @@ class HeadlessWebview: NSObject {
     init(channel: FlutterMethodChannel, id: Int) {
         WKWebViewCustome.hookWKWebView()
         let configuration = WKWebViewConfiguration()
-        configuration.allowsInlineMediaPlayback = true
+        configuration.allowsInlineMediaPlayback = false
         self.headlessWKURLSchemeHandler = HeadlessWKURLSchemeHandler(channel: channel, id: id)
         
         if #available(iOS 11.0, *) {
@@ -26,15 +26,17 @@ class HeadlessWebview: NSObject {
         self.webView = WKWebView(frame: .zero, configuration: configuration)
         
         self.uiWindow = UIApplication.shared.keyWindow
+//        self.uiWindow?.addSubview(self.webView!)
         self.uiWindow?.insertSubview(self.webView!, at: 0)
         self.uiWindow?.sendSubviewToBack(self.webView!)
         
     }
     deinit {
-        print("HeadlessWebview - dealloc")
+//        print("HeadlessWebview - dealloc")
+        self.headlessWKURLSchemeHandler?.cancelAll()
+        self.webView?.removeFromSuperview()
         self.uiWindow = nil
         self.webView = nil
-        self.headlessWKURLSchemeHandler?.cancelAll()
         self.headlessWKURLSchemeHandler = nil
     }
     
