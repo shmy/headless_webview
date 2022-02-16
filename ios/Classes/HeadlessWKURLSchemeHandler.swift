@@ -25,10 +25,7 @@ class HeadlessWKURLSchemeHandler: NSObject, WKURLSchemeHandler {
         tasks.forEach { task in
             // https://juejin.cn/post/6844903954212454413
             if let isValid = self.holdUrlSchemeTasks[task.description] {
-                if !isValid {
-                    return
-                }
-                if (task.state == .running) {
+                if (isValid && task.state == .running) {
                     task.cancel()
                 }
             }
