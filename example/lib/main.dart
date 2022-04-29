@@ -16,8 +16,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
   @override
   void initState() {
     super.initState();
@@ -27,15 +25,20 @@ class _MyAppState extends State<MyApp> {
   // Platform messages are asynchronous, so we initialize in an async method.
   void initPlatformState() {
     late final VoidCallback dispose;
+    RegExp linkExp = RegExp(r'.*?byteamone.cn.*');
+    RegExp featureExp = RegExp(r'.*?.flv');
 
     dispose = HeadlessWebview.run(
-        url:
-            "https://jx.parwix.com:4433/player/?url=https://v.qq.com/x/cover/mzc00200nx1hbcr.html",
-        onIntercepted: (res) {
-          if (res.url.path.endsWith("mp4") || res.url.path.endsWith("m3u8")) {
-            print(res);
-          }
-        });
+      url:
+          "http://124.248.66.175:695/?url=https://www.bilibili.com/bangumi/play/ep471898",
+      onIntercepted: (res) {
+        final String url = res.url.toString();
+        if (linkExp.hasMatch(url)) {
+          print(featureExp.hasMatch(url));
+        }
+      },
+      headless: false,
+    );
     Timer(const Duration(seconds: 10), () {
       dispose();
     });
@@ -47,9 +50,6 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
         ),
       ),
     );

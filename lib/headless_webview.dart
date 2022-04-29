@@ -41,6 +41,7 @@ class HeadlessWebview {
   static run({
     required String url,
     ValueChanged<HeadlessResponse>? onIntercepted,
+    bool headless = true,
   }) {
     _id += 1;
     if (_id > 2022) {
@@ -54,7 +55,7 @@ class HeadlessWebview {
       onIntercepted?.call(response);
     }
     _handlers.add(handle);
-    _channel.invokeMethod('launch', {"id": id, "url": url});
+    _channel.invokeMethod('launch', {"id": id, "url": url, 'headless': headless});
 
     return () {
       _handlers.remove(handle);
